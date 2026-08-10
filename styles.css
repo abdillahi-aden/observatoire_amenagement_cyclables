@@ -582,6 +582,10 @@ footer {
     overflow-wrap: anywhere;
   }
 
+  .topbar h1 {
+    font-size: 19px;
+  }
+
   .brand-mark {
     width: 38px;
     height: 38px;
