@@ -22,6 +22,7 @@ body {
   color: var(--ink);
   background: var(--paper);
   font-family: Inter, "Segoe UI", Arial, sans-serif;
+  overflow-x: hidden;
 }
 
 .app-shell {
@@ -38,6 +39,10 @@ body {
   padding: 16px 28px;
   background: var(--white);
   border-bottom: 1px solid var(--line);
+}
+
+.topbar > div:not(.brand-mark):not(.update-pill) {
+  min-width: 0;
 }
 
 .brand-mark {
@@ -521,10 +526,14 @@ footer {
 
   h1 {
     font-size: 21px;
+    line-height: 1.15;
   }
 
   .dashboard {
     grid-template-columns: 1fr;
+    height: auto;
+    max-height: none;
+    min-height: 0;
   }
 
   .sidebar {
@@ -533,8 +542,16 @@ footer {
     border-bottom: 1px solid var(--line);
   }
 
+  .map-panel {
+    height: 72vh;
+    min-height: 520px;
+    max-height: none;
+  }
+
   #map {
-    height: 68vh;
+    height: 72vh;
+    min-height: 520px;
+    max-height: none;
   }
 
   .legend-card {
@@ -554,9 +571,18 @@ footer {
 }
 
 @media (max-width: 560px) {
+  .topbar {
+    gap: 12px;
+  }
+
   .brand-mark {
     width: 38px;
     height: 38px;
+    flex: 0 0 38px;
+  }
+
+  .demo-note {
+    font-size: 12px;
   }
 
   .kpi-grid {
@@ -583,5 +609,15 @@ footer {
 
   .arcgis-button {
     top: 78px;
+  }
+
+  .map-panel {
+    height: 78vh;
+    min-height: 560px;
+  }
+
+  #map {
+    height: 78vh;
+    min-height: 560px;
   }
 }
