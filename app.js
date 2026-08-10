@@ -157,9 +157,10 @@ function initMap() {
 
   L.control.zoom({ position: "bottomright" }).addTo(state.map);
 
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    maxZoom: 19,
-    attribution: "&copy; OpenStreetMap",
+  L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}", {
+    maxZoom: 16,
+    attribution:
+      "Tiles &copy; Esri &mdash; Sources: Esri, HERE, Garmin, FAO, NOAA, USGS, &copy; OpenStreetMap contributors, GIS User Community",
   }).addTo(state.map);
 
   state.layers.quartiers = L.geoJSON(state.data.quartiers, {
@@ -331,12 +332,14 @@ function formatDate(date) {
     : "date ArcGIS non disponible";
 }
 
+function formatShortDate(date) {
+  return date ? new Intl.DateTimeFormat("fr-FR").format(date) : "date ArcGIS non disponible";
+}
+
 function updateSourceSummary() {
   const statuses = Object.values(state.sourceStatus);
   const arcgisCount = statuses.filter((status) => status.origin === "arcgis").length;
-  let label = "Copies locales utilisées";
-  if (arcgisCount === statuses.length) label = "Données chargées depuis ArcGIS Online";
-  else if (arcgisCount > 0) label = "Sources mixtes : ArcGIS Online et copies locales";
+  const usesFallback = arcgisCount < statuses.length;
 
   const latestModified = statuses
     .map((status) => status.metadata?.modified)
@@ -351,10 +354,12 @@ function updateSourceSummary() {
     })
     .join("\n");
 
-  document.getElementById("source-label").textContent = label;
-  document.getElementById("updated-date").textContent = formatDate(latestModified);
-  document.getElementById("source-detail").textContent = details;
-  document.getElementById("source-detail").title = details;
+  document.getElementById("updated-date").textContent = formatShortDate(latestModified);
+  const warning = document.getElementById("source-warning");
+  const status = document.getElementById("source-status");
+  warning.hidden = !usesFallback;
+  status.classList.toggle("has-warning", usesFallback);
+  status.title = usesFallback ? details : "";
 }
 
 function updateCounter(count) {
@@ -376,30 +381,29 @@ function initCharts() {
     data: { labels: [], datasets: [{ label: "km", data: [], backgroundColor: [] }] },
     options: chartOptions("Kilomètres"),
   });
-
-  const yearCtx = document.getElementById("year-chart");
-  state.charts.year = new Chart(yearCtx, {
-    type: "bar",
-    data: { labels: [], datasets: [{ data: [], backgroundColor: ["#0b6b57", "#8f98a3", "#f28c28"] }] },
-    options: chartOptions("Tronçons"),
-  });
 }
 
 function chartOptions(axisTitle) {
   return {
+    indexAxis: "y",
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
       legend: { display: false },
       tooltip: {
         callbacks: {
-          label: (context) => `${formatter.format(context.parsed.y ?? context.parsed)} ${axisTitle.toLowerCase()}`,
+          label: (context) => `${formatter.format(context.parsed.x ?? context.parsed)} ${axisTitle.toLowerCase()}`,
         },
       },
     },
     scales: {
-      x: { grid: { display: false }, ticks: { maxRotation: 35, minRotation: 0 } },
-      y: { beginAtZero: true, grid: { color: "#edf1ee" }, title: { display: true, text: axisTitle } },
+      x: {
+        beginAtZero: true,
+        grid: { color: "#edf1ee" },
+        title: { display: true, text: axisTitle },
+        ticks: { precision: 0 },
+      },
+      y: { grid: { display: false }, ticks: { color: "#66736f" } },
     },
   };
 }
@@ -411,14 +415,6 @@ function updateCharts(features) {
   state.charts.type.data.datasets[0].data = typeLabels.map((label) => Number(byType[label].toFixed(2)));
   state.charts.type.data.datasets[0].backgroundColor = typeLabels.map(colorForType);
   state.charts.type.update();
-
-  const countByType = aggregate(features, typeClass);
-  const countLabels = Object.keys(countByType).sort((a, b) => countByType[b] - countByType[a]);
-  state.charts.year.data.labels = countLabels;
-  state.charts.year.data.datasets[0].label = "Tronçons";
-  state.charts.year.data.datasets[0].data = countLabels.map((label) => countByType[label]);
-  state.charts.year.data.datasets[0].backgroundColor = countLabels.map(colorForType);
-  state.charts.year.update();
 }
 
 function buildLegend() {

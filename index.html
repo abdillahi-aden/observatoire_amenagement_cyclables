@@ -14,16 +14,16 @@
     <div class="app-shell">
       <header class="topbar">
         <div class="brand-mark" aria-hidden="true">↔</div>
-        <div>
-          <p class="eyebrow">Ville de Montreuil</p>
+        <div class="title-block">
           <h1>Observatoire des aménagements cyclables - Montreuil</h1>
-          <p class="demo-note">Projet de démonstration réalisé dans le cadre d'une candidature</p>
+          <div class="header-meta">
+            <p class="demo-note">Projet de démonstration réalisé dans le cadre d'une candidature</p>
+          </div>
         </div>
-        <div class="update-pill">
+        <div class="update-pill" id="source-status">
           <span></span>
-          <strong id="source-label">Chargement des sources</strong>
-          <small id="source-detail">Vérification ArcGIS Online en cours</small>
-          <em>Dernière mise à jour : <strong id="updated-date">8 août 2026</strong></em>
+          <strong>MAJ <span id="updated-date">08/08/2026</span></strong>
+          <small id="source-warning" hidden>Certaines données proviennent d'une copie locale</small>
         </div>
       </header>
 
@@ -76,7 +76,7 @@
             </article>
             <article class="kpi-card">
               <span class="kpi-icon">S</span>
-              <p>Stationnement</p>
+              <p>Arceaux</p>
               <strong id="kpi-arceaux-sites">0</strong>
               <small><span id="kpi-arceaux-places">0</span> places déclarées</small>
             </article>
@@ -91,17 +91,11 @@
           <section class="chart-card">
             <div class="card-title">
               <p>Répartition</p>
-              <h3>Longueur par type</h3>
+              <h3>Longueur du réseau par type d'aménagement</h3>
             </div>
-            <canvas id="type-chart" height="190"></canvas>
-          </section>
-
-          <section class="chart-card compact">
-            <div class="card-title">
-              <p>Disponibilité</p>
-              <h3>Tronçons par type</h3>
+            <div class="chart-frame">
+              <canvas id="type-chart"></canvas>
             </div>
-            <canvas id="year-chart" height="150"></canvas>
           </section>
         </aside>
 
@@ -157,7 +151,7 @@
       </main>
 
       <footer>
-        Sources : Montreuil Data, Ville de Montreuil - Plan Vélo 2023-2026. Fond cartographique © OpenStreetMap contributors.
+        Sources : Montreuil Data, Ville de Montreuil - Plan Vélo 2023-2026. Fond cartographique : Esri World Light Gray Canvas.
       </footer>
     </div>
 
