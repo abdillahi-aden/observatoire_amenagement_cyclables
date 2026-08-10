@@ -77,7 +77,7 @@ Si une couche ArcGIS échoue ou ne renvoie pas un GeoJSON valide, seule cette co
 ## Liens
 
 - Web Map ArcGIS Online : https://www.arcgis.com/apps/mapviewer/index.html?webmap=6d0277782d2b4c9cb45f238172a0dfd9
-- Dashboard GitHub Pages : à compléter après déploiement.
+- Dashboard GitHub Pages : https://abdillahi-aden.github.io/observatoire_amenagement_cyclables/
 
 ## Lancement local
 
