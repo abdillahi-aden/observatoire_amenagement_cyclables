@@ -572,7 +572,14 @@ footer {
 
 @media (max-width: 560px) {
   .topbar {
+    display: grid;
+    grid-template-columns: 38px minmax(0, 1fr);
     gap: 12px;
+  }
+
+  .topbar h1,
+  .demo-note {
+    overflow-wrap: anywhere;
   }
 
   .brand-mark {
@@ -607,8 +614,16 @@ footer {
     text-align: center;
   }
 
+  .reset-button {
+    top: 12px;
+  }
+
   .arcgis-button {
-    top: 78px;
+    top: 62px;
+  }
+
+  .map-count {
+    top: 118px;
   }
 
   .map-panel {
