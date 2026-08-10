@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Observatoire des aménagements cyclables - Montreuil</title>
+    <meta name="description" content="Dashboard open source de démonstration sur les aménagements cyclables de Montreuil.">
+    <link rel="preconnect" href="https://unpkg.com">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand-mark" aria-hidden="true">↔</div>
+        <div>
+          <p class="eyebrow">Ville de Montreuil</p>
+          <h1>Observatoire des aménagements cyclables - Montreuil</h1>
+          <p class="demo-note">Projet de démonstration réalisé dans le cadre d'une candidature</p>
+        </div>
+        <div class="update-pill">
+          <span></span>
+          <strong id="source-label">Chargement des sources</strong>
+          <small id="source-detail">Vérification ArcGIS Online en cours</small>
+          <em>Dernière mise à jour : <strong id="updated-date">8 août 2026</strong></em>
+        </div>
+      </header>
+
+      <main class="dashboard">
+        <aside class="sidebar" aria-label="Tableau de bord">
+          <div class="section-heading">
+            <p>Tableau de bord</p>
+            <h2>Le réseau en chiffres</h2>
+          </div>
+
+          <div class="filters" aria-label="Filtres">
+            <label>
+              <span>Information temporelle</span>
+              <select id="year-filter">
+                <option value="all">Toutes</option>
+              </select>
+            </label>
+            <label>
+              <span>Type d'aménagement</span>
+              <select id="type-filter">
+                <option value="all">Toutes</option>
+              </select>
+            </label>
+          </div>
+
+          <section class="kpi-grid" aria-label="Indicateurs">
+            <article class="kpi-card primary">
+              <span class="kpi-icon">Σ</span>
+              <p>Réseau inventorié</p>
+              <strong><span id="kpi-km">0</span> km</strong>
+              <small>Longueur totale affichée</small>
+            </article>
+            <article class="kpi-card">
+              <span class="kpi-icon">#</span>
+              <p>Tronçons</p>
+              <strong id="kpi-segments">0</strong>
+              <small>Aménagements affichés</small>
+            </article>
+            <article class="kpi-card">
+              <span class="kpi-icon">?</span>
+              <p>Année inconnue</p>
+              <strong id="kpi-unknown">0</strong>
+              <small>Sans année officielle</small>
+            </article>
+            <article class="kpi-card">
+              <span class="kpi-icon">P</span>
+              <p>Période documentée</p>
+              <strong id="kpi-period">0</strong>
+              <small>Tronçons documentés sur 2018-2022</small>
+            </article>
+            <article class="kpi-card">
+              <span class="kpi-icon">S</span>
+              <p>Stationnement</p>
+              <strong id="kpi-arceaux-sites">0</strong>
+              <small><span id="kpi-arceaux-places">0</span> places déclarées</small>
+            </article>
+            <article class="kpi-card">
+              <span class="kpi-icon">V</span>
+              <p>Vélobox</p>
+              <strong id="kpi-velobox-sites">0</strong>
+              <small><span id="kpi-velobox-places">0</span> places capacité indicative</small>
+            </article>
+          </section>
+
+          <section class="chart-card">
+            <div class="card-title">
+              <p>Répartition</p>
+              <h3>Longueur par type</h3>
+            </div>
+            <canvas id="type-chart" height="190"></canvas>
+          </section>
+
+          <section class="chart-card compact">
+            <div class="card-title">
+              <p>Disponibilité</p>
+              <h3>Tronçons par type</h3>
+            </div>
+            <canvas id="year-chart" height="150"></canvas>
+          </section>
+        </aside>
+
+        <section class="map-panel" aria-label="Carte interactive">
+          <div id="map"></div>
+          <div class="map-card map-count">
+            <p>Carte interactive</p>
+            <strong><span id="visible-count">0</span> aménagements affichés</strong>
+          </div>
+          <button class="reset-button" id="reset-filters" type="button">Réinitialiser les filtres</button>
+          <a class="arcgis-button" id="arcgis-link" href="https://www.arcgis.com/apps/mapviewer/index.html?webmap=6d0277782d2b4c9cb45f238172a0dfd9" target="_blank" rel="noreferrer">
+            Ouvrir la carte ArcGIS
+          </a>
+          <div class="map-card layer-control">
+            <h3>Couches</h3>
+            <label><input type="checkbox" data-layer-toggle="amenagements" checked> Aménagements cyclables</label>
+            <label><input type="checkbox" data-layer-toggle="quartiers" checked> Quartiers</label>
+            <label><input type="checkbox" data-layer-toggle="arceaux"> Stationnements avec arceaux</label>
+            <label><input type="checkbox" data-layer-toggle="velobox" checked> Vélobox</label>
+          </div>
+          <div class="map-card details-card" id="details-card">
+            <button id="close-details" type="button" aria-label="Fermer la fiche">×</button>
+            <p class="status-dot">Sélection active</p>
+            <h3 id="detail-title">Sélectionnez un tronçon</h3>
+            <dl>
+              <div>
+                <dt>Catégorie</dt>
+                <dd id="detail-type">-</dd>
+              </div>
+              <div>
+                <dt>Année</dt>
+                <dd id="detail-year">-</dd>
+              </div>
+              <div>
+                <dt>Longueur</dt>
+                <dd id="detail-length">-</dd>
+              </div>
+              <div>
+                <dt>Source</dt>
+                <dd id="detail-source">-</dd>
+              </div>
+            </dl>
+          </div>
+          <div class="map-card legend-card">
+            <h3>Légende</h3>
+            <div id="legend"></div>
+          </div>
+          <div class="bottom-ribbon">
+            <span>Carte réalisée avec ArcGIS Online, tableau de bord développé avec des technologies open source</span>
+            <strong id="ribbon-total">0 km au total</strong>
+          </div>
+        </section>
+      </main>
+
+      <footer>
+        Sources : Montreuil Data, Ville de Montreuil - Plan Vélo 2023-2026. Fond cartographique © OpenStreetMap contributors.
+      </footer>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@turf/turf@7.2.0/turf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
