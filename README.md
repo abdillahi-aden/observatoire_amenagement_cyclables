@@ -4,8 +4,6 @@ Tableau de bord cartographique en JavaScript pour explorer le réseau cyclable, 
 
 [Démonstration GitHub Pages](https://abdillahi-aden.github.io/observatoire_amenagement_cyclables/) · [Web Map ArcGIS Online](https://www.arcgis.com/apps/mapviewer/index.html?webmap=6d0277782d2b4c9cb45f238172a0dfd9)
 
-**Projet de démonstration non officiel, non réalisé pour le compte de la Ville de Montreuil.** Il a été conçu comme étude de cas dans le cadre d’une candidature au poste de Chargé de projets SIG.
-
 ## Fonctionnalités
 
 - Carte interactive des aménagements cyclables, quartiers, sites avec arceaux et implantations Vélobox.
