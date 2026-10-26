@@ -2,6 +2,8 @@
 
 Tableau de bord cartographique en JavaScript pour explorer le réseau cyclable, les quartiers et les stationnements vélo de Montreuil.
 
+Cette réalisation du portfolio SIG d’Abdillahi Aden associe cartographie interactive, indicateurs et accès aux données géographiques publiques.
+
 [Démonstration GitHub Pages](https://abdillahi-aden.github.io/observatoire_amenagement_cyclables/) · [Web Map ArcGIS Online](https://www.arcgis.com/apps/mapviewer/index.html?webmap=6d0277782d2b4c9cb45f238172a0dfd9)
 
 ## Fonctionnalités
@@ -58,7 +60,7 @@ Les identifiants d’items ArcGIS présents dans le code désignent des ressourc
 
 ## Données et sources
 
-Les sources publiques citées dans le projet sont : Montreuil Data — Aménagement vélo à Montreuil, Secteurs & Quartiers, Arceaux vélo, Abris sécurisés pour les vélos / Vélobox ; et Ville de Montreuil — Plan Vélo 2023-2026.
+Les sources publiques utilisées sont : Montreuil Data — Aménagement vélo à Montreuil, Secteurs & Quartiers, Arceaux vélo, Abris sécurisés pour les vélos / Vélobox ; et Ville de Montreuil — Plan Vélo 2023-2026.
 
 | Couche | GeoJSON ArcGIS Online prioritaire | Copie locale |
 | --- | --- | --- |
